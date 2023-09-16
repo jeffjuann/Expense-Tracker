@@ -1,73 +1,57 @@
-import { VStack } from 'native-base';
+import { ScrollView, VStack } from 'native-base';
 import { View, Text, StyleSheet } from 'react-native';
 import * as SQLite from 'expo-sqlite';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import Card from '../components/ui/transCard';
+import { transaction } from "../types/type";
+
 
 export default function History() 
 {
-  const db = SQLite.openDatabase("examples.db");
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const isInitialMount = useRef(true);
+  const db = SQLite.openDatabase("example1.db");
+  const [transactions, setTransactions] = useState<transaction[]>([]);
   
-  useEffect(() =>
+  function getTransaction()
   {
     db.transaction(tx => 
     {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS transactions ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, type TEXT, date DATE )'
+      tx.executeSql('SELECT * FROM transactions ORDER BY date DESC', undefined,
+      (txObj, resultSet) => setTransactions(resultSet.rows._array),
+      (txObj, error) =>
+      {
+        console.log(error);
+        return true;
+      }
       );
-    })
+      console.log('test');
+      console.log(transactions);
+    });
+  }
 
-    db.transaction(tx => 
+  useEffect(() =>
+  {
+    if(isInitialMount.current === true)
     {
-      tx.executeSql(
-        'SELECT * FROM transactions', 
-        [null],
-        (txObj, resultSet) => setTransactions(resultSet.rows._array),
-        (txObj, error) =>
-        {
-          console.log(error);
-          return true;
-        }
-      );
-    })
-  })
+      db.transaction(tx => 
+      {
+        tx.executeSql('CREATE TABLE IF NOT EXISTS transactions ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, type TEXT, date TEXT )');
+      })
+      getTransaction();
+      isInitialMount.current = false;
+    }
+  }, [transactions])
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>History</Text>
-      <VStack style={styles.transactionList}>
-        {transactions.map((transaction) =>
-              {
-                return (
-                  <>
-                    <Text>Name : {transaction.name}</Text>
-                    <Text>Amount : {transaction.amount}</Text>
-                    <Text>Date : {transaction.date}</Text>
-                    <Text>Type : {transaction.type}</Text>
-                  </>
-                )
-              })}
-      </VStack>
+    <View style={{ flex: 1, marginTop: 12, backgroundColor: '#FAF9F6'}}>
+      <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+        {transactions.map((transaction: transaction) =>
+        {
+          return (
+            <Card transactionProps={transaction}/>
+          )
+        })}
+      </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    flex: 1,
-    justifyContent: "center",
-  },
-  separator: {
-    height: 1,
-    marginVertical: 30,
-    width: "80%",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  transactionList: {
-    flexDirection: 'column'
-  }
-});

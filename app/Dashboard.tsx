@@ -196,7 +196,7 @@ export default function Dashboard()
       {/* Content */}
       <View 
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: '#FAF9F6',
           flex: 1,
           gap: 16,
           height: '100%'
@@ -392,7 +392,7 @@ export default function Dashboard()
         </View>
 
         {/* Divider */}
-        <View style={{marginHorizontal: 24}}>
+        <View style={{marginHorizontal: 12}}>
           <Divider color={'#141414'}/>
         </View>
 
@@ -408,14 +408,22 @@ export default function Dashboard()
         </View>
 
         {/* Divider */}
-        <View style={{marginHorizontal: 24}}>
+        <View style={{marginHorizontal: 12}}>
           <Divider color={'#141414'}/>
         </View>
 
         <View style={{flex: 1}}>
           <Text fontSize="xl" bold
-            style={{marginHorizontal:24, marginBottom: 12}}
-          >Weekly Transaction</Text>
+            style={{
+              paddingHorizontal:12, 
+              paddingBottom: 12, 
+              marginHorizontal: 12, 
+              borderBottomColor: '#141414',
+              borderBottomWidth: 1
+            }}
+          >
+            Weekly Transaction
+          </Text>
           
           <View style={{ flex: 1}}>
             <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
