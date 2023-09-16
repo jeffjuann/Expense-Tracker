@@ -2,13 +2,18 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { SplashScreen } from 'expo-router';
 import { useEffect } from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { DrawerItemList, createDrawerNavigator } from '@react-navigation/drawer';
 import { NativeBaseProvider } from 'native-base';
 
 //SCREENS
 import Dashboard from './Dashboard';
 import History from './History';
 import About from './About';
+
+// ICONS
+import DashboardIcon from '../assets/icons/dashboardIcon';
+import HistoryIcon from '../assets/icons/historyIcon';
+import AboutIcon from '../assets/icons/aboutIcon';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -48,6 +53,9 @@ function App() {
           drawerStyle: {
             backgroundColor: '#FAF9F6',
           },
+          drawerItemStyle: {
+            borderRadius: 6,
+          },
           drawerActiveTintColor: '#FFFFFF',
           drawerActiveBackgroundColor: '#4790FC',
         }}
@@ -59,10 +67,11 @@ function App() {
             title: "Dashboard", 
             headerShown: true,
             headerStyle: {
-              backgroundColor: 'rgb(0,0,0,0)',
-              
+              backgroundColor: 'rgb(0,0,0,0)', 
             },
-            
+            drawerIcon: ({ color }) => (
+              <DashboardIcon color={color} style={{marginRight: -16}}/>
+            ),
           }} 
         />
         <Drawer.Screen 
@@ -71,6 +80,9 @@ function App() {
           options = {{ 
             title: "History", 
             headerShown: true,
+            drawerIcon: ({ color }) => (
+              <HistoryIcon color={color} style={{marginRight: -16}}/>
+            )
           }}
         />
         <Drawer.Screen 
@@ -79,7 +91,10 @@ function App() {
           options = {{ 
             title: "About Us", 
             headerTitle: "", 
-            headerShown: true
+            headerShown: true,
+            drawerIcon: ({ color }) => (
+              <AboutIcon color={color} style={{marginRight: -16}}/>
+            )
           }}
         />
       </Drawer.Navigator>
