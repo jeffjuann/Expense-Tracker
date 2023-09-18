@@ -66,6 +66,7 @@ function App() {
           options = {{ 
             title: "Dashboard", 
             headerShown: true,
+            headerTransparent: true,
             headerStyle: {
               backgroundColor: 'rgb(0,0,0,0)', 
             },

@@ -16,7 +16,7 @@ export default function History()
   {
     db.transaction(tx => 
     {
-      tx.executeSql('SELECT * FROM transactions ORDER BY date DESC', undefined,
+      tx.executeSql('SELECT * FROM trLog ORDER BY date DESC', undefined,
       (txObj, resultSet) => setTransactions(resultSet.rows._array),
       (txObj, error) =>
       {
@@ -24,8 +24,6 @@ export default function History()
         return true;
       }
       );
-      console.log('test');
-      console.log(transactions);
     });
   }
 
@@ -35,7 +33,7 @@ export default function History()
     {
       db.transaction(tx => 
       {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS transactions ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, type TEXT, date TEXT )');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS trLog ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, type TEXT, date TEXT )');
       })
       getTransaction();
       isInitialMount.current = false;

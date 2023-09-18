@@ -226,265 +226,263 @@ export default function Dashboard()
       style={{
         flex: 1,
         height: '100%',
-        backgroundColor: 'green'
       }}
     >
-      {/* Header */}
-      <View 
-        style={{
-          paddingHorizontal: 24,
-          backgroundColor: 'cyan',
-          paddingVertical: 48
-        }}
-      >
-        <Text fontSize="xl" bold>Your Balance</Text>
-        <Text fontSize="3xl" bold>{formatRupiah(totalBalance)}</Text>
-      </View>
-
-      {/* Content */}
-      <View 
-        style={{
-          backgroundColor: '#FAF9F6',
-          flex: 1,
-          gap: 16,
-          height: '100%'
-        }}
-      >
-        {/* Bordering */}
+      <ScrollView>
+        {/* Header */}
         <View 
           style={{
-            position: 'absolute',
-            width: '100%',
-            height: 16,
-            backgroundColor: '#FFFFFF',
-            borderTopStartRadius: 16,
-            borderTopEndRadius: 16,
-            transform: [{translateY: -16}],
-          }}/>
-
-        {/* Action Section */}
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            justifyContent: 'center',
-            gap: 24,
+            paddingHorizontal: 24,
+            backgroundColor: '#4790FC',
+            paddingTop: 148,
+            paddingBottom: 48,
+            
           }}
         >
-          {/* Add Expense Popup */}
-          <Center> 
-            <Button 
-              onPress={() => setShowModalE(true)} 
-              _text={{
-                color: "#7F1D1D"
-              }}
-              style={{
-                backgroundColor: '#FCA5A5',
-                marginHorizontal: 12,
-                marginVertical: 10
-              }}
-            >
-              Add Expense
-            </Button>
-            <Modal isOpen={showModalE} onClose={() => setShowModalE(false)}>
-              <Modal.Content maxWidth="400px">
-                <Modal.CloseButton />
-                <Modal.Header>Add Expense</Modal.Header>
-                <Modal.Body>
-                  <FormControl>
-                    <FormControl.Label>Name</FormControl.Label>
-                    <Input 
-                      type='text' 
-                      value={expenseValue.name} 
-                      onChangeText={val => setExpenseValue({ ...expenseValue, name: val })}/>
-                  </FormControl>
-                  <FormControl mt="3">
-                    <FormControl.Label>Amount</FormControl.Label>
-                    <Input  
-                      type='text' 
-                      value={expenseValue.amount.toString()}
-                      onKeyPress={(event: any) => {
-                        if (!/[0-9]/.test(event.key)) {
-                          event.preventDefault();
-                        }
-                      }}
-                      onChangeText={val => setExpenseAmount(parseInt(val))}/>
-                  </FormControl>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button.Group space={2}>
-                    <Button
-                      onPress={() => 
-                      {
-                        setShowModalE(false);
-                      }}
-                      _text={{
-                        color: "#141414"
-                      }}
-                      style={{
-                        borderColor: '#000000',
-                        borderWidth: 1,
-                        backgroundColor: 'rgb(0,0,0,0)',
-                        paddingHorizontal: 12,
-                        paddingVertical: 10
-                      }}  
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      onPress={() =>
-                      {
-                        setShowModalE(false);
-                        addExpense();
-                      }}
-                      _text={{
-                        color: "#7F1D1D"
-                      }}
-                      style={{
-                        backgroundColor: '#FCA5A5',
-                        paddingHorizontal: 12,
-                        paddingVertical: 10
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Button.Group>
-                </Modal.Footer>
-              </Modal.Content>
-            </Modal>
-          </Center>
-
-          {/* Add Income Popup */}
-          <Center>
-            <Button 
-              onPress={() => setShowModalI(true)}
-              _text={{
-                color: "#064E3B"
-              }}
-              style={{
-                backgroundColor: '#6EE7B7',
-                paddingHorizontal: 12,
-                paddingVertical: 10
-              }}
-            >
-              Add Income
-            </Button>
-            <Modal isOpen={showModalI} onClose={() => setShowModalI(false)}>
-              <Modal.Content maxWidth="400px">
-                <Modal.CloseButton />
-                <Modal.Header>Add Income</Modal.Header>
-                <Modal.Body>
-                  <FormControl>
-                    <FormControl.Label>Name</FormControl.Label>
-                    <Input
-                      type='text' 
-                      value={incomeValue.name} 
-                      onChangeText={val => setIncomeValue({ ...incomeValue, name: val })}/>
-                  </FormControl>
-                  <FormControl mt="3">
-                    <FormControl.Label>Amount</FormControl.Label>
-                    <Input 
-                      type='text' 
-                      value={incomeValue.amount.toString()}
-                      onKeyPress={(event: any) => {
-                        if (!/[0-9]/.test(event.key)) {
-                          event.preventDefault();
-                        }
-                      }}
-                      onChangeText={val => setIncomeAmount(parseInt(val))}/>
-                  </FormControl>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button.Group space={2}>
-                    <Button
-                      onPress={() =>
-                      {
-                        setShowModalI(false);
-                      }}
-                      _text={{
-                        color: "#141414"
-                      }}
-                      style={{
-                        borderColor: '#000000',
-                        borderWidth: 1,
-                        backgroundColor: 'rgb(0,0,0,0)',
-                        paddingHorizontal: 12,
-                        paddingVertical: 10
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      onPress={() => 
-                      {
-                        setShowModalI(false);
-                        addIncome();
-                      }}
-                      _text={{
-                        color: "#064E3B"
-                      }}
-                      style={{
-                        backgroundColor: '#6EE7B7',
-                        paddingHorizontal: 12,
-                        paddingVertical: 10
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Button.Group>
-                </Modal.Footer>
-              </Modal.Content>
-            </Modal>
-          </Center>
-          
+          <Text fontSize="xl" bold>Your Balance</Text>
+          <Text fontSize="3xl" bold>{formatRupiah(totalBalance)}</Text>
         </View>
 
-        {/* Divider */}
-        <View style={{marginHorizontal: 12}}>
-          <Divider color={'#141414'}/>
-        </View>
-
-        {/* Weekly Stats */}
+        {/* Content */}
         <View 
           style={{
-            marginHorizontal: 24,     
+            backgroundColor: '#FAF9F6',
+            flex: 1,
+            gap: 16,
+            height: '100%'
           }}
         >
-          <Text fontSize="xl" bold>Your Weekly Expenses</Text>
-          <Text fontSize="2xs">{getWeekRange()}</Text>
-          <Text fontSize="2xl" bold>{formatRupiah(weeklyBalance)}</Text>
-        </View>
-
-        {/* Divider */}
-        <View style={{marginHorizontal: 12}}>
-          <Divider color={'#141414'}/>
-        </View>
-
-        <View style={{flex: 1}}>
-          <Text fontSize="xl" bold
+          {/* Bordering */}
+          <View 
             style={{
-              paddingHorizontal:12, 
-              paddingBottom: 12, 
-              marginHorizontal: 12, 
-              borderBottomColor: '#141414',
-              borderBottomWidth: 1
+              position: 'absolute',
+              width: '100%',
+              height: 16,
+              backgroundColor: '#FFFFFF',
+              borderTopStartRadius: 16,
+              borderTopEndRadius: 16,
+              transform: [{translateY: -16}],
+            }}/>
+
+          {/* Action Section */}
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'center',
+              gap: 24,
+              paddingTop: 16,
             }}
           >
-            Weekly Transaction
-          </Text>
-          
-          <View style={{ flex: 1}}>
-            <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+            {/* Add Expense Popup */}
+            <Center> 
+              <Button 
+                onPress={() => setShowModalE(true)} 
+                _text={{
+                  color: "#7F1D1D"
+                }}
+                style={{
+                  backgroundColor: '#FCA5A5',
+                  marginHorizontal: 12,
+                  marginVertical: 10
+                }}
+              >
+                Add Expense
+              </Button>
+              <Modal isOpen={showModalE} onClose={() => setShowModalE(false)}>
+                <Modal.Content maxWidth="400px">
+                  <Modal.CloseButton />
+                  <Modal.Header>Add Expense</Modal.Header>
+                  <Modal.Body>
+                    <FormControl>
+                      <FormControl.Label>Name</FormControl.Label>
+                      <Input 
+                        type='text' 
+                        value={expenseValue.name} 
+                        onChangeText={val => setExpenseValue({ ...expenseValue, name: val })}/>
+                    </FormControl>
+                    <FormControl mt="3">
+                      <FormControl.Label>Amount</FormControl.Label>
+                      <Input  
+                        type='text' 
+                        value={expenseValue.amount.toString()}
+                        onKeyPress={(event: any) => {
+                          if (!/[0-9]/.test(event.key)) {
+                            event.preventDefault();
+                          }
+                        }}
+                        onChangeText={val => setExpenseAmount(parseInt(val))}/>
+                    </FormControl>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button.Group space={2}>
+                      <Button
+                        onPress={() => 
+                        {
+                          setShowModalE(false);
+                        }}
+                        _text={{
+                          color: "#141414"
+                        }}
+                        style={{
+                          borderColor: '#000000',
+                          borderWidth: 1,
+                          backgroundColor: 'rgb(0,0,0,0)',
+                          paddingHorizontal: 12,
+                          paddingVertical: 10
+                        }}  
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        onPress={() =>
+                        {
+                          setShowModalE(false);
+                          addExpense();
+                        }}
+                        _text={{
+                          color: "#7F1D1D"
+                        }}
+                        style={{
+                          backgroundColor: '#FCA5A5',
+                          paddingHorizontal: 12,
+                          paddingVertical: 10
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </Button.Group>
+                  </Modal.Footer>
+                </Modal.Content>
+              </Modal>
+            </Center>
+
+            {/* Add Income Popup */}
+            <Center>
+              <Button 
+                onPress={() => setShowModalI(true)}
+                _text={{
+                  color: "#064E3B"
+                }}
+                style={{
+                  backgroundColor: '#6EE7B7',
+                  paddingHorizontal: 12,
+                  paddingVertical: 10
+                }}
+              >
+                Add Income
+              </Button>
+              <Modal isOpen={showModalI} onClose={() => setShowModalI(false)}>
+                <Modal.Content maxWidth="400px">
+                  <Modal.CloseButton />
+                  <Modal.Header>Add Income</Modal.Header>
+                  <Modal.Body>
+                    <FormControl>
+                      <FormControl.Label>Name</FormControl.Label>
+                      <Input
+                        type='text' 
+                        value={incomeValue.name} 
+                        onChangeText={val => setIncomeValue({ ...incomeValue, name: val })}/>
+                    </FormControl>
+                    <FormControl mt="3">
+                      <FormControl.Label>Amount</FormControl.Label>
+                      <Input 
+                        type='text' 
+                        value={incomeValue.amount.toString()}
+                        onKeyPress={(event: any) => {
+                          if (!/[0-9]/.test(event.key)) {
+                            event.preventDefault();
+                          }
+                        }}
+                        onChangeText={val => setIncomeAmount(parseInt(val))}/>
+                    </FormControl>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button.Group space={2}>
+                      <Button
+                        onPress={() =>
+                        {
+                          setShowModalI(false);
+                        }}
+                        _text={{
+                          color: "#141414"
+                        }}
+                        style={{
+                          borderColor: '#000000',
+                          borderWidth: 1,
+                          backgroundColor: 'rgb(0,0,0,0)',
+                          paddingHorizontal: 12,
+                          paddingVertical: 10
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        onPress={() => 
+                        {
+                          setShowModalI(false);
+                          addIncome();
+                        }}
+                        _text={{
+                          color: "#064E3B"
+                        }}
+                        style={{
+                          backgroundColor: '#6EE7B7',
+                          paddingHorizontal: 12,
+                          paddingVertical: 10
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </Button.Group>
+                  </Modal.Footer>
+                </Modal.Content>
+              </Modal>
+            </Center>
+            
+          </View>
+
+          {/* Divider */}
+          <View style={{marginHorizontal: 12}}>
+            <Divider color={'#141414'}/>
+          </View>
+
+          {/* Weekly Stats */}
+          <View 
+            style={{
+              marginHorizontal: 24,     
+            }}
+          >
+            <Text fontSize="xl" bold>Your Weekly Expenses</Text>
+            <Text fontSize="2xs">{getWeekRange()}</Text>
+            <Text fontSize="2xl" bold>{formatRupiah(weeklyBalance)}</Text>
+          </View>
+
+          {/* Divider */}
+          <View style={{marginHorizontal: 12}}>
+            <Divider color={'#141414'}/>
+          </View>
+
+          <View style={{flex: 1}}>
+            <Text fontSize="xl" bold
+              style={{
+                marginHorizontal: 24,
+              }}>
+              Weekly Transaction
+            </Text>
+            
+            <View style={{ flex: 1}}>
               {transactions.map((transaction: transaction) =>
               {
                 return (
                   <Card transactionProps={transaction}/>
                 )
               })}
-            </ScrollView>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
+      
     </SafeAreaView>
   );
 }
