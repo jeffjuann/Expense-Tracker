@@ -11,12 +11,15 @@ export default function Dashboard()
   const isInitialMount = useRef(true);
   const db = SQLite.openDatabase("example1.db");
   const [transactions, setTransactions] = useState<transaction[]>([]);
+  const [ totalBalance, setTotalBalance ] = useState<number>(0);
+  const [ weeklyBalance, setWeeklyBalance ] = useState<number>(0);
+
   
   function getTransaction()
   {
     db.transaction(tx => 
     {
-      tx.executeSql('SELECT * FROM transactions ORDER BY date DESC', undefined,
+      tx.executeSql('SELECT * FROM trLog ORDER BY date DESC', undefined,
       (txObj, resultSet) => setTransactions(resultSet.rows._array),
       (txObj, error) =>
       {
@@ -29,17 +32,63 @@ export default function Dashboard()
     });
   }
 
+  function getTotalBalance()
+  {
+    db.transaction(tx => 
+    {
+      tx.executeSql('SELECT SUM(amount) as total FROM trLog', undefined,
+      (txObj, resultSet) => setTotalBalance(resultSet.rows._array[0].total),
+      (txObj, error) =>
+      {
+        console.log(error);
+        return true;
+      }
+      );
+    });
+  }
+
+  function getWeekRangeDB()
+  {
+    // GET MONDAY
+    var d = new Date();
+    var day = d.getDay(),
+        diff = d.getDate() - day + (day == 0 ? -6:1);
+    const monday = new Date(d.setDate(diff));
+
+    // GET SUNDAY
+    const sunday = new Date();
+    sunday.setDate(monday.getDate() + 6);
+    return sunday.toISOString() + ' AND ' + monday.toISOString();
+  }
+
+  function getWeeklyBalance()
+  {
+    db.transaction(tx => 
+    {
+      tx.executeSql(`SELECT SUM(amount) as total FROM trLog WHERE date BETWEEN ${getWeekRangeDB()}`, undefined,
+      (txObj, resultSet) => setWeeklyBalance(resultSet.rows._array[0].total),
+      (txObj, error) =>
+      {
+        console.log(error);
+        return true;
+      }
+      );
+    });
+  }
+
   useEffect(() =>
   {
     if(isInitialMount.current === true)
     {
       db.transaction(tx => 
       {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS transactions ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, type TEXT, date TEXT )');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS trLog ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, amount INTEGER, type TEXT, date TEXT )');
       })
       getTransaction();
       isInitialMount.current = false;
     }
+    getTotalBalance();
+    // getWeeklyBalance();
   }, [transactions])
 
   const [showModalE, setShowModalE] = useState(false);
@@ -54,7 +103,7 @@ export default function Dashboard()
     db.transaction(tx =>
       {
         const date = new Date();
-        tx.executeSql('INSERT INTO transactions (name, amount, type, date) values (?, ?, \'EXPENSE\', ?)', [expenseValue.name, expenseValue.amount, date.toISOString()],
+        tx.executeSql('INSERT INTO trLog (name, amount, type, date) values (?, ?, \'EXPENSE\', ?)', [expenseValue.name, -(expenseValue.amount), date.toISOString()],
         (txObj, resultSet) =>
         {
           const temp: transaction = 
@@ -96,7 +145,7 @@ export default function Dashboard()
     db.transaction(tx =>
       {
         const date = new Date();
-        tx.executeSql('INSERT INTO transactions (name, amount, type, date) values (?, ?, \'INCOME\', ?)', [incomeValue.name, incomeValue.amount, date.toISOString()],
+        tx.executeSql('INSERT INTO trLog (name, amount, type, date) values (?, ?, \'INCOME\', ?)', [incomeValue.name, incomeValue.amount, date.toISOString()],
         (txObj, resultSet) =>
         {
           const temp: transaction = 
@@ -167,11 +216,10 @@ export default function Dashboard()
     }
   
     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-    return 'Rp. ' + rupiah;
+    if(value >= 0) return 'Rp. ' + rupiah;
+    else return 'Rp. -' + rupiah; 
+    
   }
-
-
-
 
   return (
     <SafeAreaView
@@ -190,7 +238,7 @@ export default function Dashboard()
         }}
       >
         <Text fontSize="xl" bold>Your Balance</Text>
-        <Text fontSize="3xl" bold>{formatRupiah(50000)}</Text>
+        <Text fontSize="3xl" bold>{formatRupiah(totalBalance)}</Text>
       </View>
 
       {/* Content */}
@@ -404,7 +452,7 @@ export default function Dashboard()
         >
           <Text fontSize="xl" bold>Your Weekly Expenses</Text>
           <Text fontSize="2xs">{getWeekRange()}</Text>
-          <Text fontSize="2xl" bold>Rp. 15.000,00</Text>
+          <Text fontSize="2xl" bold>{formatRupiah(weeklyBalance)}</Text>
         </View>
 
         {/* Divider */}

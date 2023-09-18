@@ -19,7 +19,7 @@ export default function Card({ transactionProps }:{ transactionProps: transactio
       marginHorizontal: 24
     }}>
       <Text fontSize="xl" bold>{transactionProps.name}</Text>
-      <Text fontSize="md" bold>{transactionProps.amount}</Text>
+      <Text fontSize="md" bold>{transactionProps.amount > 0 ? transactionProps.amount : -(transactionProps.amount)}</Text>
       <Text fontSize="sm">{formatDate(Date(transactionProps.date))}</Text>
       {transactionProps.type === 'INCOME' ? <Text>INCOME</Text> : <Text>EXPENSE</Text>}
     </View>
