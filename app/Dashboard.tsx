@@ -4,7 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 import { transaction } from './../types/type';
 import Card from '../components/ui/transCard';
-import { formatDate } from '../components/ui/dateFormat';
+
+// FORMAT
+import { formatDate } from '../components/dateFormat';
+import { formatRupiah } from '../components/currencyFormat';
 
 export default function Dashboard() 
 {
@@ -89,24 +92,6 @@ export default function Dashboard()
     getTotalBalance();
     getWeeklyBalance();
   }, [transactions])
-
-  function formatRupiah(value: number)
-  {
-    var number_string = value.toString().replace(/[^,\d]/g, '').toString();
-    var split = number_string.split(',');
-    var sisa = split[0].length % 3;
-    var rupiah = split[0].substr(0, sisa);
-    var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-  
-    if(ribuan){
-      var separator = sisa ? '.' : '';
-      rupiah += separator + ribuan.join('.');
-    }
-  
-    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-    if(value >= 0) return 'Rp. ' + rupiah;
-    else return 'Rp. -' + rupiah; 
-  }
 
   const [showModalE, setShowModalE] = useState(false);
   const [expenseValue, setExpenseValue] = useState<transaction>({
@@ -471,7 +456,7 @@ export default function Dashboard()
               Weekly Transaction
             </Text>
             
-            <View style={{ flex: 1}}>
+            <View style={{ flex: 1, width: '100%'}}>
               {transactions.map((transaction: transaction) =>
               {
                 return (

@@ -41,7 +41,7 @@ export default function History()
   }, [transactions])
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FAF9F6'}}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
       <ScrollView style={{ flexGrow: 1, paddingTop: 12 }} showsVerticalScrollIndicator={false}>
         {transactions.map((transaction: transaction) =>
         {
