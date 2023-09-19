@@ -9,7 +9,6 @@ import { Container, NativeBaseProvider} from 'native-base';
 //SCREENS
 import Dashboard from './Dashboard';
 import History from './History';
-import About from './About';
 
 // ICONS
 import DashboardIcon from '../assets/icons/dashboardIcon';
@@ -111,18 +110,6 @@ function App()
             headerShown: true,
             drawerIcon: ({ color }) => (
               <HistoryIcon color={color} style={{marginRight: -16}}/>
-            )
-          }}
-        />
-        <Drawer.Screen 
-          name='About' 
-          component={About} 
-          options = {{ 
-            title: "About Us", 
-            headerTitle: "", 
-            headerShown: true,
-            drawerIcon: ({ color }) => (
-              <AboutIcon color={color} style={{marginRight: -16}}/>
             )
           }}
         />
