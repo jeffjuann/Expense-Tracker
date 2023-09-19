@@ -10,7 +10,7 @@ export default function Dashboard()
 {
   const isInitialMount = useRef(true);
   const db = SQLite.openDatabase("example1.db");
-  const [transactions, setTransactions] = useState<transaction[]>([]);
+  const [ transactions, setTransactions ] = useState<transaction[]>([]);
   const [ totalBalance, setTotalBalance ] = useState<number>(0);
   const [ weeklyBalance, setWeeklyBalance ] = useState<number>(0);
 
@@ -27,8 +27,6 @@ export default function Dashboard()
         return true;
       }
       );
-      console.log('test');
-      console.log(transactions);
     });
   }
 
@@ -54,11 +52,12 @@ export default function Dashboard()
     var day = d.getDay(),
         diff = d.getDate() - day + (day == 0 ? -6:1);
     const monday = new Date(d.setDate(diff));
-
+    monday.setHours(0,0,0,0);
     // GET SUNDAY
     const sunday = new Date();
     sunday.setDate(monday.getDate() + 6);
-    return sunday.toISOString() + ' AND ' + monday.toISOString();
+    sunday.setHours(0,0,0,0);
+    return '\'' + monday.toISOString() + '\' AND \'' + sunday.toISOString() + '\'';
   }
 
   function getWeeklyBalance()
@@ -88,8 +87,26 @@ export default function Dashboard()
       isInitialMount.current = false;
     }
     getTotalBalance();
-    // getWeeklyBalance();
+    getWeeklyBalance();
   }, [transactions])
+
+  function formatRupiah(value: number)
+  {
+    var number_string = value.toString().replace(/[^,\d]/g, '').toString();
+    var split = number_string.split(',');
+    var sisa = split[0].length % 3;
+    var rupiah = split[0].substr(0, sisa);
+    var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+  
+    if(ribuan){
+      var separator = sisa ? '.' : '';
+      rupiah += separator + ribuan.join('.');
+    }
+  
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    if(value >= 0) return 'Rp. ' + rupiah;
+    else return 'Rp. -' + rupiah; 
+  }
 
   const [showModalE, setShowModalE] = useState(false);
   const [expenseValue, setExpenseValue] = useState<transaction>({
@@ -202,24 +219,7 @@ export default function Dashboard()
     if(isNaN(number)) setIncomeValue({ ...incomeValue, amount: 0 });
     else setIncomeValue({ ...incomeValue, amount: number });
   }
-  
-  function formatRupiah(value: number){
-    var number_string = value.toString().replace(/[^,\d]/g, '').toString();
-    var split = number_string.split(',');
-    var sisa = split[0].length % 3;
-    var rupiah = split[0].substr(0, sisa);
-    var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-  
-    if(ribuan){
-      var separator = sisa ? '.' : '';
-      rupiah += separator + ribuan.join('.');
-    }
-  
-    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-    if(value >= 0) return 'Rp. ' + rupiah;
-    else return 'Rp. -' + rupiah; 
-    
-  }
+
 
   return (
     <SafeAreaView

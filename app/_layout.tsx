@@ -1,9 +1,10 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { SplashScreen } from 'expo-router';
-import { useEffect } from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NativeBaseProvider } from 'native-base';
+import { JSX, ReactNode, RefAttributes, useEffect } from 'react';
+import { Image } from 'react-native';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
+import { Container, NativeBaseProvider} from 'native-base';
 
 //SCREENS
 import Dashboard from './Dashboard';
@@ -14,6 +15,9 @@ import About from './About';
 import DashboardIcon from '../assets/icons/dashboardIcon';
 import HistoryIcon from '../assets/icons/historyIcon';
 import AboutIcon from '../assets/icons/aboutIcon';
+import { DrawerNavigationHelpers, DrawerDescriptorMap, DrawerProps, DrawerContentComponentProps } from '@react-navigation/drawer/lib/typescript/src/types';
+import { DrawerNavigationState, ParamListBase } from '@react-navigation/native';
+import { ScrollViewProps, ScrollView } from 'react-native/Libraries/Components/ScrollView/ScrollView';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -44,11 +48,37 @@ export default function RootLayout()
 
 const Drawer = createDrawerNavigator();
 
-function App() {
+function CustomDrawer(props: DrawerContentComponentProps)
+{
+  return (
+    <DrawerContentScrollView {...props}>
+      <Container
+        style={{
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 32,
+          marginLeft: 24,
+          marginBottom: 48,
+        }}
+      >
+        <Image
+          source={require('../assets/images/icon.png')}
+          style={{
+            width: 186,
+            height: 123,
+          }} />
+      </Container>
+      <DrawerItemList {...props}/>
+    </DrawerContentScrollView>
+  )
+}
 
+function App()
+{
   return (
     <NativeBaseProvider>
-      <Drawer.Navigator
+      <Drawer.Navigator drawerContent={(props) => <CustomDrawer {...props}/>}
         screenOptions={{
           drawerStyle: {
             backgroundColor: '#FAF9F6',
@@ -59,6 +89,7 @@ function App() {
           drawerActiveTintColor: '#FFFFFF',
           drawerActiveBackgroundColor: '#4790FC',
         }}
+        
         >
         <Drawer.Screen 
           name='Dashboard' 
@@ -67,9 +98,6 @@ function App() {
             title: "Dashboard", 
             headerShown: true,
             headerTransparent: true,
-            headerStyle: {
-              backgroundColor: 'rgb(0,0,0,0)', 
-            },
             drawerIcon: ({ color }) => (
               <DashboardIcon color={color} style={{marginRight: -16}}/>
             ),
