@@ -9,7 +9,7 @@ import { transaction } from "../types/type";
 export default function History() 
 {
   const isInitialMount = useRef(true);
-  const db = SQLite.openDatabase("example1.db");
+  const db = SQLite.openDatabase("example.db");
   const [transactions, setTransactions] = useState<transaction[]>([]);
   
   function getTransaction()

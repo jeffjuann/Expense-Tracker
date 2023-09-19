@@ -1,4 +1,4 @@
-import { View, SafeAreaView } from 'react-native';
+import { View, SafeAreaView, ImageBackground } from 'react-native';
 import { Text, Button, Modal, Center, FormControl, Input, Divider, ScrollView } from 'native-base';
 import { useEffect, useRef, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
@@ -12,12 +12,11 @@ import { formatRupiah } from '../components/currencyFormat';
 export default function Dashboard() 
 {
   const isInitialMount = useRef(true);
-  const db = SQLite.openDatabase("example1.db");
+  const db = SQLite.openDatabase("example.db");
   const [ transactions, setTransactions ] = useState<transaction[]>([]);
   const [ totalBalance, setTotalBalance ] = useState<number>(0);
   const [ weeklyBalance, setWeeklyBalance ] = useState<number>(0);
 
-  
   function getTransaction()
   {
     db.transaction(tx => 
@@ -33,12 +32,18 @@ export default function Dashboard()
     });
   }
 
+  function checkBalance(value: number): number
+  {
+    if(value !== null ) return value;
+    else return 0;
+  }
+
   function getTotalBalance()
   {
     db.transaction(tx => 
     {
       tx.executeSql('SELECT SUM(amount) as total FROM trLog', undefined,
-      (txObj, resultSet) => setTotalBalance(resultSet.rows._array[0].total),
+      (txObj, resultSet) => setTotalBalance(checkBalance(resultSet.rows._array[0].total)),
       (txObj, error) =>
       {
         console.log(error);
@@ -68,7 +73,7 @@ export default function Dashboard()
     db.transaction(tx => 
     {
       tx.executeSql(`SELECT SUM(amount) as total FROM trLog WHERE date BETWEEN ${getWeekRangeDB()}`, undefined,
-      (txObj, resultSet) => setWeeklyBalance(resultSet.rows._array[0].total),
+      (txObj, resultSet) => setWeeklyBalance(checkBalance(resultSet.rows._array[0].total)),
       (txObj, error) =>
       {
         console.log(error);
@@ -131,6 +136,7 @@ export default function Dashboard()
       amount: 0,
       type: 'EXPENSE'
     })
+    console.log("EXPENSE ADDED");
     getTransaction();
     console.log(transactions);
   }
@@ -173,6 +179,7 @@ export default function Dashboard()
       amount: 0,
       type: 'INCOME'
     })
+    console.log("INCOME ADDED");
     getTransaction();
     console.log(transactions);
   }
@@ -215,18 +222,18 @@ export default function Dashboard()
     >
       <ScrollView>
         {/* Header */}
-        <View 
+        <ImageBackground
+          source={require('../assets/images/HeaderBG.jpg')}
           style={{
             paddingHorizontal: 24,
             backgroundColor: '#4790FC',
             paddingTop: 148,
             paddingBottom: 48,
-            
           }}
         >
           <Text fontSize="xl" bold>Your Balance</Text>
           <Text fontSize="3xl" bold>{formatRupiah(totalBalance)}</Text>
-        </View>
+        </ImageBackground>
 
         {/* Content */}
         <View 

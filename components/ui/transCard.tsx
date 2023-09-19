@@ -75,7 +75,7 @@ export default function Card({ transactionProps }:{ transactionProps: transactio
         }}  
       >
         <Text fontSize="sm">{ transactionProps.date !== undefined ? formatDate(new Date(transactionProps.date)) : 'undefined' }</Text>
-        <Text fontSize="md" bold>{transactionProps.amount > 0 ? formatRupiah(transactionProps.amount) : formatRupiah(-(transactionProps.amount))}</Text>
+        <Text fontSize="md" bold>{transactionProps.amount > 0 ? formatRupiah(transactionProps.amount) : formatRupiah((-transactionProps.amount))}</Text>
       </Box>
     </Box>
   )
