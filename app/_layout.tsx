@@ -13,10 +13,7 @@ import History from './History';
 // ICONS
 import DashboardIcon from '../assets/icons/dashboardIcon';
 import HistoryIcon from '../assets/icons/historyIcon';
-import AboutIcon from '../assets/icons/aboutIcon';
-import { DrawerNavigationHelpers, DrawerDescriptorMap, DrawerProps, DrawerContentComponentProps } from '@react-navigation/drawer/lib/typescript/src/types';
-import { DrawerNavigationState, ParamListBase } from '@react-navigation/native';
-import { ScrollViewProps, ScrollView } from 'react-native/Libraries/Components/ScrollView/ScrollView';
+import { DrawerContentComponentProps } from '@react-navigation/drawer/lib/typescript/src/types';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -95,8 +92,7 @@ function App()
           component={Dashboard} 
           options = {{ 
             title: "Dashboard", 
-            headerShown: true,
-            headerTransparent: true,
+            headerShown: false,
             drawerIcon: ({ color }) => (
               <DashboardIcon color={color} style={{marginRight: -16}}/>
             ),
@@ -107,7 +103,7 @@ function App()
           component={History} 
           options = {{ 
             title: "History", 
-            headerShown: true,
+            headerShown: false,
             drawerIcon: ({ color }) => (
               <HistoryIcon color={color} style={{marginRight: -16}}/>
             )

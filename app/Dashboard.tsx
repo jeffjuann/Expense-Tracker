@@ -1,15 +1,16 @@
 import { View, SafeAreaView, ImageBackground } from 'react-native';
-import { Text, Button, Modal, Center, FormControl, Input, Divider, ScrollView } from 'native-base';
+import { Text, Button, Modal, Center, FormControl, Input, Divider, ScrollView, Box, HamburgerIcon } from 'native-base';
 import { useEffect, useRef, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 import { transaction } from './../types/type';
+import { DrawerNavigationProp } from '@react-navigation/drawer/lib/typescript/src/types';
 import Card from '../components/ui/transCard';
 
 // FORMAT
 import { formatDate } from '../components/dateFormat';
 import { formatRupiah } from '../components/currencyFormat';
 
-export default function Dashboard() 
+export default function Dashboard({ navigation }: { navigation: DrawerNavigationProp<any>}) 
 {
   const isInitialMount = useRef(true);
   const db = SQLite.openDatabase("example.db");
@@ -225,14 +226,43 @@ export default function Dashboard()
         <ImageBackground
           source={require('../assets/images/HeaderBG.jpg')}
           style={{
-            paddingHorizontal: 24,
             backgroundColor: '#4790FC',
-            paddingTop: 148,
             paddingBottom: 48,
           }}
         >
-          <Text fontSize="xl" bold>Your Balance</Text>
-          <Text fontSize="3xl" bold>{formatRupiah(totalBalance)}</Text>
+          <Box
+            style={{
+              paddingTop: 48,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              gap: 28,
+              paddingHorizontal: 24,
+            }}
+          >
+            <Button
+              style={{
+                backgroundColor: '#00000000',
+                width: 28,
+                height: 28,
+              }}
+              onPress={() => navigation.openDrawer()}
+            >
+              <HamburgerIcon
+                size="7"
+                color='#000000'
+              />
+            </Button>
+          </Box>
+          <Box
+            style={{
+              paddingHorizontal: 24,
+              marginTop: 98,
+            }}
+          >
+            <Text fontSize="xl" bold >Your Balance</Text>
+            <Text fontSize="3xl" bold >{formatRupiah(totalBalance)}</Text>
+          </Box>
         </ImageBackground>
 
         {/* Content */}
